@@ -1,0 +1,7 @@
+<h1>Index</h1>
+<ul>
+  <% @files.each_with_index do |file, idx| %>
+    <li>
+      <a href="<%= file %>"><%= file %></li>
+  <% end %>
+</ul>
