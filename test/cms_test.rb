@@ -2,14 +2,23 @@ ENV["RACK_ENV"] = "test"
 
 require "minitest/autorun"
 require "rack/test"
+require 'fileutils'
 
-require_relative "cms"
+require "../cms"
 
 class AppTest < MiniTest::Test
   include Rack::Test::Methods
 
   def app
     Sinatra::Application
+  end
+
+  def setup
+    FileUtils.mkdir_p(data_path)
+  end
+
+  def teardown
+    FileUtils.rm_rf(data_path)
   end
 
   def test_index
