@@ -21,8 +21,8 @@ end
 get "/:filename" do
   filename = params[:filename]
   file_path = File.join(data_path, filename)
-  if File.exist?("data/#{filename}")
-    load_file_body(filename)
+  if File.exist?(file_path)
+    load_file_body(filename, file_path)
   else
     session[:error_message] = "#{filename} does not exist."
     redirect "/"
@@ -32,20 +32,19 @@ end
 get "/:filename/edit" do
   @filename = params[:filename]
   file_path = File.join(data_path, @filename)
-  if File.exist?("data/#{@filename}")
-    @file_body = load_file_body(@filename)
+  if File.exist?(file_path)
+    @file_body = File.read(file_path)
     erb :edit
   else
     session[:error_message] = "#{@filename} does not exist."
     redirect "/"
   end
-
 end
 
 post "/:filename" do
   filename = params[:filename]
   file_path = File.join(data_path, filename)
-  File.write("data/#{filename}", params[:edited_file])
+  File.write(file_path, params[:edited_file])
   session[:error_message] = "#{params[:filename]} has been updated."
   redirect "/"
 end
@@ -55,13 +54,13 @@ def render_markdown(text)
   markdown.render(text)
 end
 
-def load_file_body(filename)
+def load_file_body(filename, file_path)
   if File.extname(filename) == ".md"
-    headers["Content-Tyoe"] = "text/html"
-    render_markdown(File.read("data/#{filename}"))
+    headers["Content-Type"] = "text/html"
+    render_markdown(File.read(file_path))
   else
-    headers["Content-Tyoe"] = "text/plain"
-    File.read("data/#{filename}")
+    headers["Content-Type"] = "text/plain"
+    File.read(file_path)
   end
 end
 
