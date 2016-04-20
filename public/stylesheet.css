@@ -1,0 +1,38 @@
+body {
+  font-family: Arial;
+}
+
+.messages {
+  background-color: #FFFF99;
+  padding: 10px 0 10px 10px;
+}
+
+li form {
+  display: inline;
+}
+
+li a:first-child {
+  width: 120px;
+  display: inline-block;
+}
+
+label {
+  display: block;
+  padding: 10px;
+}
+
+p {
+  display: inline-block;
+}
+
+p + form {
+  display: inline-block;
+}
+
+p + form input {
+  display: inline;
+}
+
+body > a {
+  display: block;
+}

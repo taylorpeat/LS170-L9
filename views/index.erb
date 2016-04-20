@@ -3,7 +3,15 @@
   <% @files.each_with_index do |file, idx| %>
     <li>
       <a href="<%= file %>"><%= file %> </a>
-      <a href="<%= file %>/edit">Edit</a>
+      <a href="<%= file %>/edit"><button>Edit</button></a>
+      <form action="<%= file %>/delete" method="post">
+        <input type="submit" value="Delete">
+      </form>
     </li>
   <% end %>
 </ul>
+<% if session[:signin] %>
+  <a href="/new">New Document</a>
+<% else %>
+  <a href="/signin"><button>Sign In</button></a>
+<% end %>

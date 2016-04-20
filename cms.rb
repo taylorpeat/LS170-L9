@@ -18,6 +18,20 @@ get "/" do
   erb :index
 end
 
+get "/new" do
+  redirect_to_index unless signed_in?
+  erb :new
+end
+
+get "/signin" do
+  if session[:signin]
+    session[:error_message] = "You are already signed in."
+    redirect "/"
+  else
+    erb :signin
+  end
+end
+
 get "/:filename" do
   filename = params[:filename]
   file_path = File.join(data_path, filename)
@@ -30,6 +44,7 @@ get "/:filename" do
 end
 
 get "/:filename/edit" do
+  redirect_to_index unless signed_in?
   @filename = params[:filename]
   file_path = File.join(data_path, @filename)
   if File.exist?(file_path)
@@ -41,11 +56,54 @@ get "/:filename/edit" do
   end
 end
 
+post "/new" do
+  redirect_to_index unless signed_in?
+  filename = params[:filename]
+  if filename == ""
+    session[:error_message] = "You must enter a file name."
+    redirect "/new"
+    halt
+  end
+  file_path = File.join(data_path, filename)
+  File.write(file_path, "")
+  session[:error_message] = "#{filename} has been created."
+  redirect "/"
+end
+
+post "/signin" do
+  if params[:username] == "admin" && params[:password] == "secret"
+    session[:signin] = params[:username]
+    session[:error_message] = "Welcome!"
+    redirect "/"
+  else
+    session[:error_message] = "Invalid Credentials"
+    status 422
+    erb :signin
+  end
+end
+
+post "/signout" do
+  session[:error_message] = "#{session[:signin]} has been signed out."
+  session[:signin] = false
+  redirect "/"
+end
+
+
+post "/:filename/delete" do
+  redirect_to_index unless signed_in?
+  filename = params[:filename]
+  file_path = File.join(data_path, filename)
+  File.delete(file_path)
+  session[:error_message] = "#{filename} has been deleted."
+  redirect "/"
+end
+
 post "/:filename" do
+  redirect_to_index unless signed_in?
   filename = params[:filename]
   file_path = File.join(data_path, filename)
   File.write(file_path, params[:edited_file])
-  session[:error_message] = "#{params[:filename]} has been updated."
+  session[:error_message] = "#{filename} has been updated."
   redirect "/"
 end
 
@@ -57,7 +115,7 @@ end
 def load_file_body(filename, file_path)
   if File.extname(filename) == ".md"
     headers["Content-Type"] = "text/html"
-    render_markdown(File.read(file_path))
+    erb render_markdown(File.read(file_path))
   else
     headers["Content-Type"] = "text/plain"
     File.read(file_path)
@@ -70,4 +128,13 @@ def data_path
   else
     File.expand_path("../data", __FILE__)
   end
+end
+
+def redirect_to_index
+  session[:error_message] = "You must be signed in to do that."
+  redirect "/"
+end
+
+def signed_in?
+  !!session[:signin]
 end

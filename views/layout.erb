@@ -2,12 +2,20 @@
 <html>
 <head>
   <title><%= @title %></title>
-  <link rel="stylesheet" href="../stylesheet.css" type="text/css">
+  <link rel="stylesheet" href="/stylesheet.css" type="text/css">
 </head>
 <body>
-  <div class="messages">
-    <%= session.delete(:error_message) %>
-  </div>
+  <% if session[:error_message] %>
+    <div class="messages">
+      <%= session.delete(:error_message) %>
+    </div>
+  <% end %>
   <%= yield %>
+  <% if session[:signin] %>
+    <p>Signed in as <%= session[:signin] %></p>
+    <form action="/signout" method="post">
+      <input type="submit" value="Sign Out">
+    </form>
+  <% end %>
 </body>
 </html>
