@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'tilt/erubis'
 require 'redcarpet'
+require 'yaml'
 
 configure do
   enable :sessions
@@ -71,7 +72,9 @@ post "/new" do
 end
 
 post "/signin" do
-  if params[:username] == "admin" && params[:password] == "secret"
+  file_path = File.join(data_path, users.yml)
+  users = load_file_body(users.yml, file_path)
+  if users[params[:username]] == params[:password]
     session[:signin] = params[:username]
     session[:error_message] = "Welcome!"
     redirect "/"
@@ -137,4 +140,8 @@ end
 
 def signed_in?
   !!session[:signin]
+end
+
+def load_user_credentials
+
 end
