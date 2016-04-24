@@ -143,5 +143,5 @@ def signed_in?
 end
 
 def load_user_credentials
-
+  
 end
