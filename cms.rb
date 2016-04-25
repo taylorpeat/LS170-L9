@@ -3,6 +3,7 @@ require 'sinatra/reloader' if development?
 require 'tilt/erubis'
 require 'redcarpet'
 require 'yaml'
+require 'bcrypt'
 
 configure do
   enable :sessions
@@ -72,9 +73,10 @@ post "/new" do
 end
 
 post "/signin" do
-  file_path = File.join(data_path, users.yml)
-  users = load_file_body(users.yml, file_path)
-  if users[params[:username]] == params[:password]
+  file_path = File.join(credentials_path, "users.yml")
+  credentials = YAML.load_file(file_path)
+  bcrypt_password = BCrypt::Password.new(credentials[params[:username]])
+  if bcrypt_password == params[:password]
     session[:signin] = params[:username]
     session[:error_message] = "Welcome!"
     redirect "/"
@@ -133,6 +135,14 @@ def data_path
   end
 end
 
+def credentials_path
+  if ENV["RACK_ENV"] == "test"
+    File.expand_path("../test", __FILE__)
+  else
+    File.expand_path("..", __FILE__)
+  end
+end
+
 def redirect_to_index
   session[:error_message] = "You must be signed in to do that."
   redirect "/"
@@ -143,5 +153,5 @@ def signed_in?
 end
 
 def load_user_credentials
-  
+
 end

@@ -1,4 +1,2 @@
-{
-  'bill' => 'billpass',
-  'bob' => 'bobpass'
-}
+admin: $2a$10$FjAMDpiaVY8igTwO0pLmr.9B8eBVIBwFEgH5pdiDuVsCyKjJR2QDK
+bob: $2a$10$Smzonl456ubDDSYfGuXqsuuwKmpNmPJnFwmokN28uPonlH7o7Eu9m
