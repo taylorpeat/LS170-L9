@@ -1,2 +1,8 @@
 admin: $2a$10$FjAMDpiaVY8igTwO0pLmr.9B8eBVIBwFEgH5pdiDuVsCyKjJR2QDK
-bob: $2a$10$Smzonl456ubDDSYfGuXqsuuwKmpNmPJnFwmokN28uPonlH7o7Eu9m
+bob: $2a$10$Smzonl456ubDDSYfGuXqsuuwKmpNmPJnFwmokN28uPonlH7o7Eu9m---
+Hello: !ruby/string:BCrypt::Password
+  str: "$2a$10$MxXXnPa7A2gmemNs/2eNL.eNMLBLHYKbGcZMTV5kEkvvksS0/7fwe"
+  version: 2a
+  cost: 10
+  salt: "$2a$10$MxXXnPa7A2gmemNs/2eNL."
+  checksum: eNMLBLHYKbGcZMTV5kEkvvksS0/7fwe

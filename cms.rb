@@ -34,6 +34,15 @@ get "/signin" do
   end
 end
 
+get "/signup" do
+  if session[:signin]
+    session[:error_message] = "You are already signed in."
+    redirect "/"
+  else
+    erb :signup
+  end
+end
+
 get "/:filename" do
   filename = params[:filename]
   file_path = File.join(data_path, filename)
@@ -61,7 +70,7 @@ end
 post "/new" do
   redirect_to_index unless signed_in?
   filename = params[:filename]
-  if filename == ""
+  if filename == "" || (filename =~ /\.txt$|\.md$/) == nil
     session[:error_message] = "You must enter a file name."
     redirect "/new"
     halt
@@ -85,6 +94,14 @@ post "/signin" do
     status 422
     erb :signin
   end
+end
+
+post "/signup" do
+  username = params[:username]
+  password_hash = BCrypt::Password.create(params[:password])
+  user = { username => password_hash }
+  users = File.join(credentials_path, "users.yml")
+  File.open(users, "a") { |f| f.write user.to_yaml }
 end
 
 post "/signout" do
@@ -150,8 +167,4 @@ end
 
 def signed_in?
   !!session[:signin]
-end
-
-def load_user_credentials
-
 end
