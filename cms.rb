@@ -4,6 +4,7 @@ require 'tilt/erubis'
 require 'redcarpet'
 require 'yaml'
 require 'bcrypt'
+require 'pry'
 
 configure do
   enable :sessions
@@ -81,6 +82,12 @@ post "/new" do
   redirect "/"
 end
 
+post "/new_image" do
+  image = params[:image]
+  File.open("#{data_path}/#{image[:filename]}", "w") { |f| f.write(image[:tempfile].read) }
+  redirect "/"
+end
+
 post "/signin" do
   file_path = File.join(credentials_path, "users.yml")
   credentials = YAML.load_file(file_path)
@@ -109,7 +116,6 @@ post "/signout" do
   session[:signin] = false
   redirect "/"
 end
-
 
 post "/:filename/delete" do
   redirect_to_index unless signed_in?

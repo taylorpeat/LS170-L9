@@ -1,6 +1,7 @@
 <h1>Index</h1>
 <ul>
   <% @files.each_with_index do |file, idx| %>
+    <% next unless file =~ /\.md|\.txt/ %>
     <li>
       <a href="<%= file %>"><%= file %> </a>
       <a href="<%= file %>/edit"><button>Edit</button></a>

@@ -5,3 +5,11 @@
   </label>
   <input type="submit" value="Create">
 </form>
+
+<form enctype="multipart/form-data" action="/new_image" method="post">
+  <label for="filename">
+    Add a new image<br>
+    <input type="file" name="image" accept="image/*" multiple="multiple">
+  </label>
+  <input type="submit" value="Upload Image">
+</form>
